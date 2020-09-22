@@ -12,7 +12,10 @@ class CubeGallery {
 CubeGallery.prototype.create = function () {
     // gallery container
     const gallery = document.querySelector('#' + this.id)
-    gallery.setAttribute('class', 'cube-gallery')
+    // remove white spaces
+    gallery.style.fontSize = '0'
+    gallery.style.lineHeight = '0'
+
     
     // gallery width
     const galleryWidth = gallery.offsetWidth
