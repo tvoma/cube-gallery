@@ -23,7 +23,7 @@ CubeGallery.prototype.create = function () {
     // images
     const images = document.querySelectorAll('#' + this.id + ' img')
     images.forEach(img => {
-        img.width = img.naturalWidth * this.minHeight / img.naturalHeight, // default width
+        img.width = Math.round(img.naturalWidth * this.minHeight / img.naturalHeight), // default width
         img.height = this.minHeight // default height
     })
 
@@ -36,11 +36,11 @@ CubeGallery.prototype.create = function () {
         let current = images[i]
         let next = images[i+1] != undefined ? images[i+1] : null
 
-        sum = sum + current.width
+        sum = Math.round(sum + current.width)
 
         row.push(current)
 
-        if (next == null || sum + next.width > galleryWidth) {
+        if (next == null || Math.round(sum + next.width) > galleryWidth) {
             rows.push(row)
             sum = 0
             row = []
@@ -49,10 +49,10 @@ CubeGallery.prototype.create = function () {
 
     rows.forEach(imgs => {
         let sum = 0 // sum of the width of the images
-        imgs.forEach(img => sum = sum + img.width)
+        imgs.forEach(img => sum = Math.round(sum + img.width))
         imgs.forEach(img => {
-            img.width = img.width * (img.height * galleryWidth / sum) / img.height
-            img.height = img.height * galleryWidth / sum
+            img.width = Math.round(img.width * (img.height * galleryWidth / sum) / img.height)
+            img.height = Math.round(img.height * galleryWidth / sum)
             img.style.width = img.width + this.unit // set image width
             img.style.height = img.height + this.unit // set image height
         })
