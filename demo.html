@@ -2,6 +2,11 @@
 <html>
     <head>
         <title>Cube gallery</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+        </style>
     </head>
     <body>
         <div id="gallery" class="gallery">
@@ -21,7 +26,8 @@
         <script type="text/javascript" src="index.js"></script>
         <script type="text/javascript">
             new CubeGallery('gallery', {
-                minHeight: 200
+                minHeight: 100,
+                margin: 5
             }).create()
         </script>
     </body>

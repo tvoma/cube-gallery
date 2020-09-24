@@ -3,9 +3,11 @@ class CubeGallery {
         // selector
         this.id = id
         // min height
-        this.minHeight = options && options.minHeight ? options.minHeight : 150
+        this.minHeight = options && options.minHeight > 0 ? options.minHeight : 150
         // unit
         this.unit = 'px'
+        // margin
+        this.margin = options && options.margin > 0 ? options.margin : 0
     }
 }
 
@@ -51,10 +53,11 @@ CubeGallery.prototype.create = function () {
         let sum = 0 // sum of the width of the images
         imgs.forEach(img => sum = Math.round(sum + img.width))
         imgs.forEach(img => {
-            img.width = Math.round(img.width * (img.height * galleryWidth / sum) / img.height)
-            img.height = Math.round(img.height * galleryWidth / sum)
+            img.width = Math.round((img.width * (img.height * galleryWidth / sum) / img.height) - this.margin * 2)
+            img.height = Math.round((img.height * galleryWidth / sum) - this.margin * 2)
             img.style.width = img.width + this.unit // set image width
             img.style.height = img.height + this.unit // set image height
+            img.style.margin = this.margin + 'px'
         })
     })
 }
