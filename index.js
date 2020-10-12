@@ -9,6 +9,10 @@ class CubeGallery {
         // margin
         this.margin = options && options.margin > 0 ? options.margin : 0
         
+        this.data()
+    }
+
+    data () {
         // gallery container
         this.gallery = document.querySelector('#' + this.id)
         gallery.style.fontSize = '0' // remove white spaces
@@ -26,6 +30,11 @@ class CubeGallery {
         // count images
         this.nbImages = this.images.length
     }
+}
+
+CubeGallery.prototype.resize = function () {
+    this.data()
+    return this.create()
 }
 
 CubeGallery.prototype.create = function () { 
@@ -56,4 +65,6 @@ CubeGallery.prototype.create = function () {
             img.style.margin = this.margin + 'px'
         })
     })
+
+    return this
 }

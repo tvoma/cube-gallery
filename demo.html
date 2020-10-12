@@ -20,10 +20,11 @@
         </div>
         <script type="text/javascript" src="index.js"></script>
         <script type="text/javascript">
-            new CubeGallery('gallery', {
+            let cg = new CubeGallery('gallery', {
                 minHeight: 100,
                 margin: 5
             }).create()
+            window.addEventListener('resize', () => { cg.resize() })
         </script>
     </body>
 </html>
