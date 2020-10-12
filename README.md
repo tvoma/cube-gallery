@@ -2,6 +2,8 @@
 
 Cube gallery is a justified / Flickr like gallery.
 
+![Capture](docs/images/capture.png)
+
 ## How to use ?
 
 ```js
