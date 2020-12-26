@@ -30,17 +30,7 @@ new CubeGallery('gallery', {
 
 ## Responsive
 
-Create your gallery like the example above.
-```js
-let cg = new CubeGallery('gallery').create()
-```
-
-Then, create a resize event listener and call resize function from _CubeGallery_.
-```js
-window.addEventListener('resize', () => {
-    cg.resize()
-})
-```
+Cube Gallery is responsive by default.
 
 ## Available options
 

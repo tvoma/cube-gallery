@@ -9,7 +9,12 @@ class CubeGallery {
         // margin
         this.margin = margin && margin > 0 ? margin : 0
         
+        // variable data
         this.data()
+        
+        window.addEventListener('resize', () => {
+            this.resize()
+        })
     }
 
     data () {
