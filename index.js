@@ -9,25 +9,25 @@ class CubeGallery {
         // margin
         this.margin = margin && margin > 0 ? margin : 0
         
+        // gallery container
+        this.gallery = document.querySelector(`#${ this.id }`)
+        this.gallery.style.fontSize = '0' // remove white spaces
+        this.gallery.style.lineHeight = '0' // remove white spaces
+
         // variable data
-        this.data()
+        this.loadData()
         
         window.addEventListener('resize', () => {
             this.resize()
         })
     }
 
-    data () {
-        // gallery container
-        this.gallery = document.querySelector('#' + this.id)
-        gallery.style.fontSize = '0' // remove white spaces
-        gallery.style.lineHeight = '0' // remove white spaces
-
+    loadData () {
         // gallery width
         this.galleryWidth = this.gallery.offsetWidth
 
         // images
-        this.images = document.querySelectorAll('#' + this.id + ' img')
+        this.images = document.querySelectorAll(`#${ this.id } img`)
         this.images.forEach(img => {
             img.width = Math.floor(img.naturalWidth * this.minHeight / img.naturalHeight), // default width
             img.height = this.minHeight // default height
@@ -38,14 +38,14 @@ class CubeGallery {
 }
 
 CubeGallery.prototype.resize = function () {
-    this.data()
+    this.loadData()
     return this.create()
 }
 
 CubeGallery.prototype.create = function () { 
     var rows = []
     var imgs = []
-    var sumOfWidth = 0
+    var sumOfWidth = 0 // sum of the width of the images
     for (let i = 0; i < this.nbImages; i++) {
         let currentImg = this.images[i]
         let nextImg = this.images[i+1] != undefined ? this.images[i+1] : null
@@ -54,7 +54,7 @@ CubeGallery.prototype.create = function () {
 
         imgs.push(currentImg)
 
-        if (nextImg == null || Math.floor(sumOfWidth + nextImg.width) > this.galleryWidth) {
+        if (nextImg == null || Math.floor(sumOfWidth + nextImg.width) > this.galleryWidth) { // if row is filled
             rows.push(imgs)
             sumOfWidth = 0
             imgs = []
