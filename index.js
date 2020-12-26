@@ -1,13 +1,13 @@
 class CubeGallery {
-    constructor(id, options) {
+    constructor(id, { minHeight, margin }) {
         // selector
         this.id = id
         // min height
-        this.minHeight = options && options.minHeight > 0 ? options.minHeight : 150
+        this.minHeight = minHeight && minHeight > 0 ? minHeight : 150
         // unit
         this.unit = 'px'
         // margin
-        this.margin = options && options.margin > 0 ? options.margin : 0
+        this.margin = margin && margin > 0 ? margin : 0
         
         this.data()
     }
