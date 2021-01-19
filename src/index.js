@@ -65,6 +65,7 @@ CubeGallery.prototype.create = function () {
         let sumOfWidth = 0 // sum of the width of the images
         imgs.forEach(img => sumOfWidth = Math.floor(sumOfWidth + img.width))
         imgs.forEach(img => {
+            img.style.position = 'relative'
             img.width = Math.floor((img.width * (img.height * this.galleryWidth / sumOfWidth) / img.height) - this.margin * 2)
             img.height = Math.floor((img.height * this.galleryWidth / sumOfWidth) - this.margin * 2)
             img.style.margin = this.margin + 'px'

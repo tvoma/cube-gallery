@@ -90,6 +90,7 @@ CubeGallery.prototype.create = function () {
             return sumOfWidth = Math.floor(sumOfWidth + img.width);
         });
         imgs.forEach(function (img) {
+            img.style.position = 'relative';
             img.width = Math.floor(img.width * (img.height * _this3.galleryWidth / sumOfWidth) / img.height - _this3.margin * 2);
             img.height = Math.floor(img.height * _this3.galleryWidth / sumOfWidth - _this3.margin * 2);
             img.style.margin = _this3.margin + 'px';
