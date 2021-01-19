@@ -4,6 +4,10 @@ Cube gallery is a justified / Flickr like gallery.
 
 ![Capture](docs/images/capture.png)
 
+## Install
+
+Use `dist/cube-gallery.min.js` file in your projet. That's it !
+
 ## How to use ?
 
 ```js
