@@ -27,6 +27,22 @@ var CubeGallery = function () {
         this.gallery.style.fontSize = '0'; // remove white spaces
         this.gallery.style.lineHeight = '0'; // remove white spaces
 
+        // extra borders or padding or margins that can be added with css
+        this.extra = 0;
+
+        // img wrapper <a>
+        var wrapper = document.querySelectorAll('#' + this.id + ' a');
+        if (wrapper.length > 0) {
+            this.findExtraWidth(wrapper[0]);
+            wrapper.forEach(function (a) {
+                a.style.display = 'inline-block';
+                a.style.position = 'relative';
+            });
+        }
+
+        var img = document.querySelectorAll('#' + this.id + ' img');
+        this.findExtraWidth(img[0]);
+
         // variable data
         this.loadData();
 
@@ -51,6 +67,17 @@ var CubeGallery = function () {
             });
             // count images
             this.nbImages = this.images.length;
+        }
+
+        // check if element has borders
+
+    }, {
+        key: 'findExtraWidth',
+        value: function findExtraWidth(elm) {
+            var borders = getComputedStyle(elm);
+            var borderLeft = Number(borders.borderLeftWidth.substr(0, borders.borderLeftWidth.length - 2));
+            var borderRight = Number(borders.borderRightWidth.substr(0, borders.borderLeftWidth.length - 2));
+            this.extra = this.extra + borderLeft + borderRight;
         }
     }]);
 
@@ -90,9 +117,8 @@ CubeGallery.prototype.create = function () {
             return sumOfWidth = Math.floor(sumOfWidth + img.width);
         });
         imgs.forEach(function (img) {
-            img.style.position = 'relative';
-            img.width = Math.floor(img.width * (img.height * _this3.galleryWidth / sumOfWidth) / img.height - _this3.margin * 2);
-            img.height = Math.floor(img.height * _this3.galleryWidth / sumOfWidth - _this3.margin * 2);
+            img.width = Math.floor(img.width * (img.height * _this3.galleryWidth / sumOfWidth) / img.height - _this3.margin * 2 - _this3.extra);
+            img.height = Math.floor(img.height * _this3.galleryWidth / sumOfWidth - _this3.margin * 2 - _this3.extra);
             img.style.margin = _this3.margin + 'px';
         });
     });

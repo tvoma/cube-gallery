@@ -14,6 +14,22 @@ class CubeGallery {
         this.gallery.style.fontSize = '0' // remove white spaces
         this.gallery.style.lineHeight = '0' // remove white spaces
 
+        // extra borders or padding or margins that can be added with css
+        this.extra = 0
+        
+        // img wrapper <a>
+        let wrapper = document.querySelectorAll(`#${ this.id } a`)
+        if (wrapper.length > 0) {
+            this.findExtraWidth(wrapper[0])
+            wrapper.forEach(a => {
+                a.style.display = 'inline-block'
+                a.style.position = 'relative'
+            })
+        }
+
+        let img = document.querySelectorAll(`#${ this.id } img`)
+        this.findExtraWidth(img[0])
+
         // variable data
         this.loadData()
         
@@ -34,6 +50,14 @@ class CubeGallery {
         })
         // count images
         this.nbImages = this.images.length
+    }
+
+    // check if element has borders
+    findExtraWidth (elm) {
+        let borders = getComputedStyle(elm)
+        let borderLeft = Number(borders.borderLeftWidth.substr(0, borders.borderLeftWidth.length - 2))
+        let borderRight = Number(borders.borderRightWidth.substr(0, borders.borderLeftWidth.length - 2))
+        this.extra = this.extra + borderLeft + borderRight
     }
 }
 
@@ -65,9 +89,8 @@ CubeGallery.prototype.create = function () {
         let sumOfWidth = 0 // sum of the width of the images
         imgs.forEach(img => sumOfWidth = Math.floor(sumOfWidth + img.width))
         imgs.forEach(img => {
-            img.style.position = 'relative'
-            img.width = Math.floor((img.width * (img.height * this.galleryWidth / sumOfWidth) / img.height) - this.margin * 2)
-            img.height = Math.floor((img.height * this.galleryWidth / sumOfWidth) - this.margin * 2)
+            img.width = Math.floor((img.width * (img.height * this.galleryWidth / sumOfWidth) / img.height) - (this.margin * 2) - this.extra)
+            img.height = Math.floor((img.height * this.galleryWidth / sumOfWidth) - (this.margin * 2) - this.extra)
             img.style.margin = this.margin + 'px'
         })
     })
