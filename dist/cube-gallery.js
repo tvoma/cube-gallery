@@ -40,14 +40,40 @@ var CubeGallery = function () {
             });
         }
 
-        var img = document.querySelectorAll('#' + this.id + ' img');
-        this.findExtraWidth(img[0]);
-
-        // variable data
-        this.loadData();
+        var imgs = document.querySelectorAll('#' + this.id + ' img');
+        this.findExtraWidth(imgs[0]);
 
         window.addEventListener('resize', function () {
             _this.resize();
+        });
+
+        // wait for all images loaded
+        var loadData = function loadData() {
+            return _this.loadData();
+        };
+        var create = function create() {
+            return _this.create();
+        };
+        var counter = 0;
+
+        imgs.forEach.call(imgs, function (img) {
+            if (img.complete) {
+                counter++;
+                if (counter === imgs.length) {
+                    console.log('All images loaded!');
+                    loadData(); // load varible datas
+                    create(); // build gallery
+                }
+            } else {
+                img.addEventListener('load', function () {
+                    counter++;
+                    if (counter === imgs.length) {
+                        console.log('All images loaded!');
+                        loadData(); // load varible datas
+                        create(); // build gallery
+                    }
+                }, false);
+            }
         });
     }
 

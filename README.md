@@ -11,7 +11,7 @@ Use `dist/cube-gallery.min.js` file in your projet. That's it !
 ## How to use ?
 
 ```js
-new CubeGallery(selector, options?).create()
+new CubeGallery(selector, options?)
 ```
 
 #### Example
@@ -34,7 +34,7 @@ Instanciate _CubeGallery_.
 ```js
 new CubeGallery('gallery', {
     minHeight: 150
-}).create()
+})
 ```
 
 ## Responsive

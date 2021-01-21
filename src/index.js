@@ -27,14 +27,37 @@ class CubeGallery {
             })
         }
 
-        let img = document.querySelectorAll(`#${ this.id } img`)
-        this.findExtraWidth(img[0])
-
-        // variable data
-        this.loadData()
+        let imgs = document.querySelectorAll(`#${ this.id } img`)
+        this.findExtraWidth(imgs[0])
         
         window.addEventListener('resize', () => {
             this.resize()
+        })
+
+        // wait for all images loaded
+        var loadData = () => this.loadData()
+        var create = () => this.create()
+        var counter = 0
+
+        imgs.forEach.call(imgs, function(img) {
+            if (img.complete) {
+                counter++;
+                if (counter === imgs.length) {
+                    console.log('All images loaded!');
+                    loadData() // load varible datas
+                    create() // build gallery
+                }
+            }
+            else {
+                img.addEventListener('load', () => {
+                    counter++;
+                    if (counter === imgs.length) {
+                        console.log('All images loaded!');
+                        loadData() // load varible datas
+                        create() // build gallery
+                    }
+                }, false)
+            }
         })
     }
 
