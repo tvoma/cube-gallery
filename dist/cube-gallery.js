@@ -1,121 +1,145 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var CubeGallery = function () {
-    function CubeGallery(id, _ref) {
-        var _this = this;
+var CubeGallery = function CubeGallery(id, _ref) {
+    var _this = this;
 
-        var minHeight = _ref.minHeight,
-            margin = _ref.margin;
+    var minHeight = _ref.minHeight,
+        margin = _ref.margin;
 
-        _classCallCheck(this, CubeGallery);
+    _classCallCheck(this, CubeGallery);
 
-        // selector
-        this.id = id;
-        // min height
-        this.minHeight = minHeight && minHeight > 0 ? minHeight : 150;
-        // unit
-        this.unit = 'px';
-        // margin
-        this.margin = margin && margin > 0 ? margin : 0;
+    // selector
+    this.id = id;
 
-        // gallery container
-        this.gallery = document.querySelector('#' + this.id);
-        this.gallery.style.fontSize = '0'; // remove white spaces
-        this.gallery.style.lineHeight = '0'; // remove white spaces
+    // min height
+    this.minHeight = minHeight && minHeight > 0 ? minHeight : 150;
 
-        // extra borders or padding or margins that can be added with css
-        this.extra = 0;
+    // margin
+    this.margin = margin && margin > 0 ? margin : 0;
 
-        // img wrapper <a>
-        var wrapper = document.querySelectorAll('#' + this.id + ' a');
-        if (wrapper.length > 0) {
-            this.findExtraWidth(wrapper[0]);
-            wrapper.forEach(function (a) {
-                a.style.display = 'inline-block';
-                a.style.position = 'relative';
-            });
+    // gallery container
+    this.gallery = document.querySelector('#' + this.id);
+
+    // gallery images
+    this.images = document.querySelectorAll('#' + this.id + ' img');
+
+    // count images
+    this.nbImages = this.images.length;
+
+    // extra borders or padding or margins that can be added with css
+    this.extra = 0;
+
+    /**
+     * Find images CSS properties that can affect gallery calculation
+     */
+    this.findExtraWidth(this.images[0]);
+
+    /**
+     * Apply CSS style
+     */
+    this.applyStyle();
+
+    /**
+     * Handle responsive
+     */
+    window.addEventListener('resize', function () {
+        _this.create();
+    });
+
+    /**
+     * Wait for all images load before creating gallery
+     */
+    var counter = 0;
+    var create = function create() {
+        if (counter === _this.nbImages) {
+            _this.create();
         }
+    };
 
-        var imgs = document.querySelectorAll('#' + this.id + ' img');
-        this.findExtraWidth(imgs[0]);
-
-        window.addEventListener('resize', function () {
-            _this.resize();
-        });
-
-        // wait for all images loaded
-        var loadData = function loadData() {
-            return _this.loadData();
-        };
-        var create = function create() {
-            return _this.create();
-        };
-        var counter = 0;
-
-        imgs.forEach.call(imgs, function (img) {
-            if (img.complete) {
+    this.images.forEach.call(this.images, function (img) {
+        if (img.complete) {
+            counter++;
+            create();
+        } else {
+            img.addEventListener('load', function () {
                 counter++;
-                if (counter === imgs.length) {
-                    console.log('All images loaded!');
-                    loadData(); // load varible datas
-                    create(); // build gallery
-                }
-            } else {
-                img.addEventListener('load', function () {
-                    counter++;
-                    if (counter === imgs.length) {
-                        console.log('All images loaded!');
-                        loadData(); // load varible datas
-                        create(); // build gallery
-                    }
-                }, false);
-            }
-        });
-    }
-
-    _createClass(CubeGallery, [{
-        key: 'loadData',
-        value: function loadData() {
-            var _this2 = this;
-
-            // gallery width
-            this.galleryWidth = this.gallery.offsetWidth;
-
-            // images
-            this.images = document.querySelectorAll('#' + this.id + ' img');
-            this.images.forEach(function (img) {
-                img.width = Math.floor(img.naturalWidth * _this2.minHeight / img.naturalHeight), // default width
-                img.height = _this2.minHeight; // default height
-            });
-            // count images
-            this.nbImages = this.images.length;
+                create();
+            }, false);
         }
-
-        // check if element has borders
-
-    }, {
-        key: 'findExtraWidth',
-        value: function findExtraWidth(elm) {
-            var borders = getComputedStyle(elm);
-            var borderLeft = Number(borders.borderLeftWidth.substr(0, borders.borderLeftWidth.length - 2));
-            var borderRight = Number(borders.borderRightWidth.substr(0, borders.borderLeftWidth.length - 2));
-            this.extra = this.extra + borderLeft + borderRight;
-        }
-    }]);
-
-    return CubeGallery;
-}();
-
-CubeGallery.prototype.resize = function () {
-    this.loadData();
-    return this.create();
+    });
 };
 
-CubeGallery.prototype.create = function () {
+/**
+ * Data that may change
+ */
+
+
+CubeGallery.prototype.loadVariableDatas = function () {
+    var _this2 = this;
+
+    // gallery width
+    this.galleryWidth = this.gallery.offsetWidth;
+
+    // images
+    this.images.forEach(function (img) {
+        img.width = Math.floor(img.naturalWidth * _this2.minHeight / img.naturalHeight), // default width
+        img.height = _this2.minHeight; // default height
+    });
+};
+
+/**
+ * Apply CSS properties
+ */
+CubeGallery.prototype.applyStyle = function () {
+    /**
+     * Remove white spaces
+     */
+    this.gallery.style.fontSize = '0'; // remove white spaces
+    this.gallery.style.lineHeight = '0'; // remove white spaces
+
+    /**
+     * Apply display inline block
+     */
+    if (this.hasWrapper()) {
+        var wrapper = document.querySelectorAll('#' + this.id + ' a');
+
+        this.findExtraWidth(wrapper[0]); // find wrapper CSS properties that can affect gallery calculation
+
+        wrapper.forEach(function (a) {
+            a.style.display = 'inline-block';
+            a.style.position = 'relative';
+        });
+    }
+};
+
+/**
+ * Check if img is wrapped by a tag
+ */
+CubeGallery.prototype.hasWrapper = function () {
+    if (document.querySelectorAll('#' + this.id + ' a').length > 0) {
+        return true;
+    }
+
+    return false;
+};
+
+/**
+ * Find CSS properties that can affect gallery calculation and add it as extra width
+ * @param {*} elm
+ */
+CubeGallery.prototype.findExtraWidth = function (elm) {
+    var borders = getComputedStyle(elm);
+    var borderLeft = Number(borders.borderLeftWidth.substr(0, borders.borderLeftWidth.length - 2));
+    var borderRight = Number(borders.borderRightWidth.substr(0, borders.borderLeftWidth.length - 2));
+    this.extra = this.extra + borderLeft + borderRight;
+};
+
+/**
+ * Generate the gallery
+ */
+CubeGallery.prototype.generate = function () {
     var _this3 = this;
 
     var rows = [];
@@ -150,5 +174,13 @@ CubeGallery.prototype.create = function () {
     });
 
     return this;
+};
+
+/**
+ * Create the gallery
+ */
+CubeGallery.prototype.create = function () {
+    this.loadVariableDatas();
+    return this.generate();
 };
 //# sourceMappingURL=cube-gallery.js.map
