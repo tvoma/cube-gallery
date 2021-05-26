@@ -13,6 +13,9 @@ class CubeGallery {
         // gallery container
         this.gallery = document.querySelector(`#${ this.id }`)
 
+        // gallery width
+        this.galleryWidth = 0 // default
+
         // gallery images
         this.images = document.querySelectorAll(`#${ this.id } img`)
 
@@ -36,7 +39,10 @@ class CubeGallery {
          * Handle responsive
          */
         window.addEventListener('resize', () => {
-            this.create()
+            // prevent height resize
+            if (this.galleryWidth != this.gallery.offsetWidth) {
+                this.create()
+            }
         })
 
         /**

@@ -22,6 +22,9 @@ var CubeGallery = function CubeGallery(id, _ref) {
     // gallery container
     this.gallery = document.querySelector('#' + this.id);
 
+    // gallery width
+    this.galleryWidth = 0; // default
+
     // gallery images
     this.images = document.querySelectorAll('#' + this.id + ' img');
 
@@ -45,7 +48,10 @@ var CubeGallery = function CubeGallery(id, _ref) {
      * Handle responsive
      */
     window.addEventListener('resize', function () {
-        _this.create();
+        // prevent height resize
+        if (_this.galleryWidth != _this.gallery.offsetWidth) {
+            _this.create();
+        }
     });
 
     /**
