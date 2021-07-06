@@ -179,3 +179,8 @@ CubeGallery.prototype.create = function () {
     this.loadVariableDatas()
     return this.generate()
 }
+
+/**
+ * Export Class
+ */
+module.exports = CubeGallery
