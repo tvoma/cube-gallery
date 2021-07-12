@@ -6,7 +6,30 @@ Cube gallery is a justified / Flickr like gallery.
 
 ## Install
 
-Use `dist/cube-gallery.min.js` file in your projet. That's it !
+Inside a `.js` file, import the CubeGallery file from the source of your choice (npm, cdn or download) :
+
+```js
+import CubeGallery from "cube-gallery-js"
+```
+
+Then, link your script inside your HTML page. Do not forget `type="module"`.
+```html
+<script type="module" src="myFile.js">
+```
+
+### NPM
+
+```bash
+npm install cube-gallery-js
+```
+Then, import in your `.js` file.
+
+### CDN
+
+Import `https://cdn.jsdelivr.net/npm/cube-gallery-js/src/index.min.js` in your `.js` file.
+
+### File
+Download and save `dist/cube-gallery.min.js` in your project. Then import in your `.js` file.
 
 ## How to use ?
 
