@@ -180,7 +180,4 @@ CubeGallery.prototype.create = function () {
     return this.generate()
 }
 
-/**
- * Export Class
- */
-module.exports = CubeGallery
+export default CubeGallery
