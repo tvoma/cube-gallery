@@ -1,6 +1,6 @@
 {
   "name": "cube-gallery-js",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Mansory justified gallery",
   "main": "index.js",
   "scripts": {
