@@ -4,6 +4,15 @@ Cube gallery is a justified / Flickr like gallery.
 
 ![Capture](docs/images/capture.png)
 
+## Table of contents
+- [Install](#install)
+    - [NPM](#npm)
+    - [CDN](#cdn)
+    - [Download](#download)
+- [How to use](#how-to-use)
+- [Responsive](#responsive)
+- [Available Options](#available-options)
+
 ## Install
 
 Inside a `.js` file, import the CubeGallery file from the source of your choice (npm, cdn or download) :
