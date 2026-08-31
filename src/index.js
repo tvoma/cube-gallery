@@ -1,14 +1,13 @@
 class CubeGallery {
-
     constructor(id, { minHeight, margin }) {
         // selector
         this.id = id
         
         // min height
         this.minHeight = minHeight && minHeight > 0 ? minHeight : 150
-        
+
         // margin
-        this.margin = margin && margin > 0 ? margin : 0
+        this.margin = margin && margin > 0 ? (margin / 2) : 0
 
         // gallery container
         this.gallery = document.querySelector(`#${ this.id }`)
@@ -20,7 +19,7 @@ class CubeGallery {
         this.images = document.querySelectorAll(`#${ this.id } img`)
 
         // count images
-        this.nbImages = this.images.length
+        this.nbrImages = this.images.length
 
         // extra borders or padding or margins that can be added with css
         this.extra = 0
@@ -48,9 +47,10 @@ class CubeGallery {
         /**
          * Wait for all images load before creating gallery
          */
-        var counter = 0
-        var create = () => {
-            if (counter === this.nbImages) {
+        let counter = 0
+
+        const create = () => {
+            if (counter === this.nbrImages) {
                 this.create()
             }
         }
@@ -70,7 +70,6 @@ class CubeGallery {
     }
 }
 
-
 /**
  * Data that may change
  */
@@ -80,11 +79,10 @@ CubeGallery.prototype.loadVariableDatas = function () {
 
     // images
     this.images.forEach(img => {
-        img.width = Math.floor(img.naturalWidth * this.minHeight / img.naturalHeight), // default width
+        img.width = img.naturalWidth * this.minHeight / img.naturalHeight, // default width
         img.height = this.minHeight // default height
     })
 }
-
 
 /**
  * Apply CSS properties
@@ -93,84 +91,84 @@ CubeGallery.prototype.applyStyle = function () {
     /**
      * Remove white spaces
      */
+    this.gallery.style.display = 'flex'
+    this.gallery.style.flexWrap = 'wrap'
     this.gallery.style.fontSize = '0' // remove white spaces
     this.gallery.style.lineHeight = '0' // remove white spaces
-
-    /**
-     * Apply display inline block
-     */
-    if (this.hasWrapper()) {
-        let wrapper = document.querySelectorAll(`#${ this.id } a`)
-        
-        this.findExtraWidth(wrapper[0]) // find wrapper CSS properties that can affect gallery calculation
-
-        wrapper.forEach(a => {
-            a.style.display = 'inline-block'
-            a.style.position = 'relative'
-        })
-    }
 }
-
-
-/**
- * Check if img is wrapped by a tag
- */
-CubeGallery.prototype.hasWrapper = function () {
-    if (document.querySelectorAll(`#${ this.id } a`).length > 0) {
-        return true
-    }
-
-    return false
-}
-
 
 /**
  * Find CSS properties that can affect gallery calculation and add it as extra width
  * @param {*} elm
  */
 CubeGallery.prototype.findExtraWidth = function (elm) {
-    let borders = getComputedStyle(elm)
-    let borderLeft = Number(borders.borderLeftWidth.substr(0, borders.borderLeftWidth.length - 2))
-    let borderRight = Number(borders.borderRightWidth.substr(0, borders.borderLeftWidth.length - 2))
+    const borders = getComputedStyle(elm)
+    const borderLeft = Number(borders.borderLeftWidth.substring(0, borders.borderLeftWidth.length - 2))
+    const borderRight = Number(borders.borderRightWidth.substring(0, borders.borderRightWidth.length - 2))
+
     this.extra = this.extra + borderLeft + borderRight
 }
-
 
 /**
  * Generate the gallery
  */
-CubeGallery.prototype.generate = function () { 
-    var rows = []
-    var imgs = []
-    var sumOfWidth = 0 // sum of the width of the images
-    for (let i = 0; i < this.nbImages; i++) {
-        let currentImg = this.images[i]
-        let nextImg = this.images[i+1] != undefined ? this.images[i+1] : null
+CubeGallery.prototype.generate = function () {
+    const rows = []
 
-        sumOfWidth = Math.floor(sumOfWidth + currentImg.width)
+    let imgs = []
+    let availableWidth = 0
+    
+    // distribut images in rows
+    for (let i = 0; i < this.nbrImages; i++) {
+        const currentImg = this.images[i]
+        const nextImg = this.images[i+1] != undefined ? this.images[i+1] : null
+
+        availableWidth += currentImg.width
 
         imgs.push(currentImg)
 
-        if (nextImg == null || Math.floor(sumOfWidth + nextImg.width) > this.galleryWidth) { // if row is filled
+        if (!nextImg || (availableWidth + nextImg.width) > this.galleryWidth) { // if row is filled
             rows.push(imgs)
-            sumOfWidth = 0
+            availableWidth = 0
             imgs = []
         }
     }
 
-    rows.forEach(imgs => {
-        let sumOfWidth = 0 // sum of the width of the images
-        imgs.forEach(img => sumOfWidth = Math.floor(sumOfWidth + img.width))
-        imgs.forEach(img => {
-            img.width = Math.floor((img.width * (img.height * this.galleryWidth / sumOfWidth) / img.height) - (this.margin * 2) - this.extra)
-            img.height = Math.floor((img.height * this.galleryWidth / sumOfWidth) - (this.margin * 2) - this.extra)
-            img.style.margin = this.margin + 'px'
+    // scale images
+    rows.forEach((imgs, rowIndex) => {
+        const isFirstRow = rowIndex === 0
+        const isLastRow = rowIndex === rows.length - 1
+        const nbrImgs = imgs.length
+        const totalMargin = ((nbrImgs - 1) * (this.margin * 2)) + (nbrImgs * this.extra)
+        const availableWidth = this.galleryWidth - totalMargin
+        const sumOfRatios = imgs.reduce((sum, img) => sum + img.width / img.height, 0)
+        const rowHeight = Math.round(availableWidth / sumOfRatios)
+
+        let widthSoFar = 0
+        
+        imgs.forEach((img, imgIndex) => {
+            const isFirstImg = imgIndex === 0
+            const isLastImg = imgIndex === nbrImgs - 1 
+
+            if (isLastImg) {
+                img.width = Math.round(availableWidth - widthSoFar)
+            }
+            else {
+                img.width = Math.round(rowHeight * (img.width / img.height))
+                widthSoFar += img.width
+            }
+
+            img.height = Math.round(rowHeight)
+
+            img.style.marginLeft = isFirstImg ? 0 : this.margin + 'px'
+            img.style.marginRight = isLastImg ? 0 : this.margin + 'px'
+            img.style.marginTop = isFirstRow ? 0 : this.margin + 'px'
+            img.style.marginBottom = isLastRow ? 0 : this.margin + 'px'
         })
     })
 
     return this
 }
-
 
 /**
  * Create the gallery

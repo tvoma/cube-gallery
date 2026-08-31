@@ -1,5 +1,6 @@
-import CubeGallery from "../src/index.js";
+import CubeGallery from '../src/index.js'
+
 new CubeGallery('gallery', {
-    minHeight: 100,
-    margin: 5
+    minHeight: 200,
+    margin: 10
 })
