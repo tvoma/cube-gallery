@@ -21,7 +21,7 @@ var CubeGallery = function CubeGallery(id, _ref) {
     this.minHeight = minHeight && minHeight > 0 ? minHeight : 150;
 
     // margin
-    this.margin = margin && margin > 0 ? margin : 0;
+    this.margin = margin && margin > 0 ? margin / 2 : 0;
 
     // gallery container
     this.gallery = document.querySelector('#' + this.id);
@@ -33,7 +33,7 @@ var CubeGallery = function CubeGallery(id, _ref) {
     this.images = document.querySelectorAll('#' + this.id + ' img');
 
     // count images
-    this.nbImages = this.images.length;
+    this.nbrImages = this.images.length;
 
     // extra borders or padding or margins that can be added with css
     this.extra = 0;
@@ -62,8 +62,9 @@ var CubeGallery = function CubeGallery(id, _ref) {
      * Wait for all images load before creating gallery
      */
     var counter = 0;
+
     var create = function create() {
-        if (counter === _this.nbImages) {
+        if (counter === _this.nbrImages) {
             _this.create();
         }
     };
@@ -94,7 +95,7 @@ CubeGallery.prototype.loadVariableDatas = function () {
 
     // images
     this.images.forEach(function (img) {
-        img.width = Math.floor(img.naturalWidth * _this2.minHeight / img.naturalHeight), // default width
+        img.width = img.naturalWidth * _this2.minHeight / img.naturalHeight, // default width
         img.height = _this2.minHeight; // default height
     });
 };
@@ -106,33 +107,10 @@ CubeGallery.prototype.applyStyle = function () {
     /**
      * Remove white spaces
      */
+    this.gallery.style.display = 'flex';
+    this.gallery.style.flexWrap = 'wrap';
     this.gallery.style.fontSize = '0'; // remove white spaces
     this.gallery.style.lineHeight = '0'; // remove white spaces
-
-    /**
-     * Apply display inline block
-     */
-    if (this.hasWrapper()) {
-        var wrapper = document.querySelectorAll('#' + this.id + ' a');
-
-        this.findExtraWidth(wrapper[0]); // find wrapper CSS properties that can affect gallery calculation
-
-        wrapper.forEach(function (a) {
-            a.style.display = 'inline-block';
-            a.style.position = 'relative';
-        });
-    }
-};
-
-/**
- * Check if img is wrapped by a tag
- */
-CubeGallery.prototype.hasWrapper = function () {
-    if (document.querySelectorAll('#' + this.id + ' a').length > 0) {
-        return true;
-    }
-
-    return false;
 };
 
 /**
@@ -141,8 +119,9 @@ CubeGallery.prototype.hasWrapper = function () {
  */
 CubeGallery.prototype.findExtraWidth = function (elm) {
     var borders = getComputedStyle(elm);
-    var borderLeft = Number(borders.borderLeftWidth.substr(0, borders.borderLeftWidth.length - 2));
-    var borderRight = Number(borders.borderRightWidth.substr(0, borders.borderLeftWidth.length - 2));
+    var borderLeft = Number(borders.borderLeftWidth.substring(0, borders.borderLeftWidth.length - 2));
+    var borderRight = Number(borders.borderRightWidth.substring(0, borders.borderRightWidth.length - 2));
+
     this.extra = this.extra + borderLeft + borderRight;
 };
 
@@ -153,33 +132,58 @@ CubeGallery.prototype.generate = function () {
     var _this3 = this;
 
     var rows = [];
+
     var imgs = [];
-    var sumOfWidth = 0; // sum of the width of the images
-    for (var i = 0; i < this.nbImages; i++) {
+    var availableWidth = 0;
+
+    // distribut images in rows
+    for (var i = 0; i < this.nbrImages; i++) {
         var currentImg = this.images[i];
         var nextImg = this.images[i + 1] != undefined ? this.images[i + 1] : null;
 
-        sumOfWidth = Math.floor(sumOfWidth + currentImg.width);
+        availableWidth += currentImg.width;
 
         imgs.push(currentImg);
 
-        if (nextImg == null || Math.floor(sumOfWidth + nextImg.width) > this.galleryWidth) {
+        if (!nextImg || availableWidth + nextImg.width > this.galleryWidth) {
             // if row is filled
             rows.push(imgs);
-            sumOfWidth = 0;
+            availableWidth = 0;
             imgs = [];
         }
     }
 
-    rows.forEach(function (imgs) {
-        var sumOfWidth = 0; // sum of the width of the images
-        imgs.forEach(function (img) {
-            return sumOfWidth = Math.floor(sumOfWidth + img.width);
-        });
-        imgs.forEach(function (img) {
-            img.width = Math.floor(img.width * (img.height * _this3.galleryWidth / sumOfWidth) / img.height - _this3.margin * 2 - _this3.extra);
-            img.height = Math.floor(img.height * _this3.galleryWidth / sumOfWidth - _this3.margin * 2 - _this3.extra);
-            img.style.margin = _this3.margin + 'px';
+    // scale images
+    rows.forEach(function (imgs, rowIndex) {
+        var isFirstRow = rowIndex === 0;
+        var isLastRow = rowIndex === rows.length - 1;
+        var nbrImgs = imgs.length;
+        var totalMargin = (nbrImgs - 1) * (_this3.margin * 2) + nbrImgs * _this3.extra;
+        var availableWidth = _this3.galleryWidth - totalMargin;
+        var sumOfRatios = imgs.reduce(function (sum, img) {
+            return sum + img.width / img.height;
+        }, 0);
+        var rowHeight = Math.round(availableWidth / sumOfRatios);
+
+        var widthSoFar = 0;
+
+        imgs.forEach(function (img, imgIndex) {
+            var isFirstImg = imgIndex === 0;
+            var isLastImg = imgIndex === nbrImgs - 1;
+
+            if (isLastImg) {
+                img.width = Math.round(availableWidth - widthSoFar);
+            } else {
+                img.width = Math.round(rowHeight * (img.width / img.height));
+                widthSoFar += img.width;
+            }
+
+            img.height = Math.round(rowHeight);
+
+            img.style.marginLeft = isFirstImg ? 0 : _this3.margin + 'px';
+            img.style.marginRight = isLastImg ? 0 : _this3.margin + 'px';
+            img.style.marginTop = isFirstRow ? 0 : _this3.margin + 'px';
+            img.style.marginBottom = isLastRow ? 0 : _this3.margin + 'px';
         });
     });
 
