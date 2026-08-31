@@ -1,9 +1,11 @@
 {
   "name": "cube-gallery-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mansory justified gallery",
   "main": "src/index.js",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "demo": "npx http-server . -o /demo/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
