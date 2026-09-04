@@ -102,6 +102,8 @@ CubeGallery.prototype.applyStyle = function () {
  * @param {*} elm
  */
 CubeGallery.prototype.findExtraWidth = function (elm) {
+    if (!elm) return
+
     const borders = getComputedStyle(elm)
     const borderLeft = Number(borders.borderLeftWidth.substring(0, borders.borderLeftWidth.length - 2))
     const borderRight = Number(borders.borderRightWidth.substring(0, borders.borderRightWidth.length - 2))
