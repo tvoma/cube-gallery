@@ -116,9 +116,13 @@ CubeGallery.prototype.applyStyle = function () {
      * Remove btn styles if exist and add cursor pointer
      */
     this.gallery.querySelectorAll('button').forEach(function (btn) {
+        btn.style.position = 'relative';
         btn.style.border = 'none';
         btn.style.padding = '0';
         btn.style.margin = '0';
+        btn.style.boxSizing = 'border-box';
+        btn.style.lineHeight = '0';
+        btn.style.fontSize = '0';
         btn.style.outline = 'none';
         btn.style.backgroundColor = 'transparent';
         btn.style.cursor = 'pointer';
