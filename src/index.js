@@ -57,12 +57,12 @@ class CubeGallery {
 
         this.images.forEach.call(this.images, function(img) {
             if (img.complete) {
-                counter++;
+                counter++
                 create()
             }
             else {
                 img.addEventListener('load', () => {
-                    counter++;
+                    counter++
                     create()
                 }, false)
             }
@@ -95,6 +95,18 @@ CubeGallery.prototype.applyStyle = function () {
     this.gallery.style.flexWrap = 'wrap'
     this.gallery.style.fontSize = '0' // remove white spaces
     this.gallery.style.lineHeight = '0' // remove white spaces
+
+    /**
+     * Remove btn styles if exist and add cursor pointer
+     */
+    this.gallery.querySelectorAll('button').forEach(btn => {
+        btn.style.border = 'none'
+        btn.style.padding = '0'
+        btn.style.margin = '0'
+        btn.style.outline = 'none'
+        btn.style.backgroundColor = 'transparent'
+        btn.style.cursor = 'pointer'
+    })
 }
 
 /**
