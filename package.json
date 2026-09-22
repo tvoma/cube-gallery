@@ -10,6 +10,7 @@
     "build": "npx grunt",
     "demo": "npx http-server . -o /demo/index.html",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "postversion": "git push --follow-tags",
     "prepare": "husky"
   },
   "author": "tvoma",
