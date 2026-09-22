@@ -9,7 +9,8 @@
   "scripts": {
     "build": "npx grunt",
     "demo": "npx http-server . -o /demo/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
   },
   "author": "tvoma",
   "license": "MIT",
@@ -19,6 +20,7 @@
     "grunt": "^1.4.1",
     "grunt-babel": "^7.0.0",
     "grunt-contrib-jshint": "^3.0.0",
-    "grunt-contrib-uglify": "^5.0.1"
+    "grunt-contrib-uglify": "^5.0.1",
+    "husky": "^9.1.7"
   }
 }
