@@ -54,13 +54,17 @@ Create a `div` with your images.
     <img src="" alt="">
     <img src="" alt="">
     ...
+    <button type="button">
+        <img src="" alt="">
+    </button>
+    ...
     <a href="#">
         <img src="" alt="">
     </a>
     ...
 </div>
 ```
-> Note that you can wrap `<img>` elements with a `<a href="#">`. `<a>` element has a relative position so you can put other elements with absolute position above. You also can add borders with CSS to `<img>` elements.
+> Note that you can wrap `<img>` elements with a `<a href="#">` or `<button>` element. `<a>` and `<button>` element has a relative position so you can put other elements with absolute position above. You also can add borders with CSS to `<img>` elements.
 
 Instanciate _CubeGallery_.
 ```js
